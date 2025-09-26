@@ -50,3 +50,75 @@ Legitimate Alternatives
 For genuine development needs, GitHub Codespaces is excellent for its intended purpose - providing consistent development environments. For free RDP access, consider legitimate providers that offer 30-day free trials with proper terms of service compliance.
 
 The video technique works temporarily but carries significant risks regarding account security, terms of service violations, and sustainability for long-term use.
+
+## HestiaCP Web Hosting Control Panel Setup
+
+### What is HestiaCP?
+HestiaCP is a free, open-source web hosting control panel that provides a web-based interface for managing web servers. It includes features for managing domains, email accounts, databases, FTP accounts, and more.
+
+### HestiaCP Docker Setup Instructions
+
+#### Prerequisites:
+- Docker and Docker Compose installed
+- GitHub Codespaces or compatible Linux environment
+- Root/sudo access
+
+#### Installation Steps:
+
+1. **Install Docker and Docker Compose:**
+```bash
+sudo apt update
+sudo apt install docker.io docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+2. **Run HestiaCP Container:**
+```bash
+# Download the HestiaCP compose file
+sudo docker-compose -f hestiacp.yml up -d
+```
+
+3. **Access HestiaCP:**
+- Web Panel: `https://your-server-ip:8083`
+- Default Username: `admin`
+- Default Password: `admin123`
+- SSH Access: Port 22
+- FTP Access: Port 21
+
+#### Port Configuration:
+- **8083**: HestiaCP Admin Panel (HTTPS)
+- **80/443**: Web Server (HTTP/HTTPS)
+- **22**: SSH Access
+- **21**: FTP Server
+- **25/587**: SMTP Email
+- **110/993**: POP3/IMAP Email
+- **3306**: MySQL Database
+- **5432**: PostgreSQL Database
+- **53**: DNS Server
+
+#### Security Considerations:
+- Change default password immediately after first login
+- Configure firewall rules appropriately
+- Use strong passwords for all accounts
+- Enable SSL/TLS certificates
+- Regular security updates
+
+#### Services Included:
+- **Web Server**: Nginx
+- **Database**: MySQL + PostgreSQL
+- **Mail Server**: Exim4 + Dovecot + Roundcube
+- **FTP Server**: vsftpd
+- **DNS Server**: Bind9
+- **Firewall**: Built-in firewall management
+
+#### First Login Steps:
+1. Access `https://your-server-ip:8083`
+2. Login with `admin` / `admin123`
+3. Change the default password
+4. Configure your server settings
+5. Add your first domain/website
+6. Set up email accounts and databases as needed
+
+### Production Usage Warning:
+While this setup works for development and testing, using GitHub Codespaces for production hosting violates their terms of service. For production use, deploy HestiaCP on a legitimate VPS or dedicated server.

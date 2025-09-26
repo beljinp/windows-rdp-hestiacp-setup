@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  hestiacp:
+    image: hestiacp/hestiacp:latest
+    container_name: hestiacp
+    hostname: hestiacp
+    restart: always
+    privileged: true
+    ports:
+      - "80:80"       # HTTP
+      - "443:443"     # HTTPS
+      - "8083:8083"   # HestiaCP Admin Panel
+      - "21:21"       # FTP
+      - "22:22"       # SSH
+      - "25:25"       # SMTP
+      - "53:53"       # DNS
+      - "110:110"     # POP3
+      - "143:143"     # IMAP
+      - "465:465"     # SMTPS
+      - "587:587"     # SMTP Submission
+      - "993:993"     # IMAPS
+      - "995:995"     # POP3S
+      - "3306:3306"   # MySQL
+      - "5432:5432"   # PostgreSQL
+    volumes:
+      - hestia_data:/backup
+      - hestia_conf:/usr/local/hestia
+      - hestia_web:/home
+      - hestia_mail:/var/lib/roundcube
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - HESTIACP_INSTALL=yes
+      - HOSTNAME=hestiacp.local
+      - EMAIL=admin@hestiacp.local
+      - PASS=admin123
+      - LANG=en
+      - WEB_SYSTEM=nginx
+      - WEB_SSL=letsencrypt
+      - WEB_PORT=8083
+      - FTP_SYSTEM=vsftpd
+      - DNS_SYSTEM=bind9
+      - MAIL_SYSTEM=exim4
+      - DB_SYSTEM=mysql,postgresql
+      - QUOTA=yes
+      - FIREWALL=yes
+      - SOFTACULOUS=no
+    networks:
+      - hestiacp_network
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+      - SYS_TIME
+    security_opt:
+      - seccomp:unconfined
+    tmpfs:
+      - /run
+      - /tmp
+
+volumes:
+  hestia_data:
+    driver: local
+  hestia_conf:
+    driver: local
+  hestia_web:
+    driver: local
+  hestia_mail:
+    driver: local
+
+networks:
+  hestiacp_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
